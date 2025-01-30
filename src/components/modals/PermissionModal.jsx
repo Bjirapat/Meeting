@@ -20,7 +20,14 @@ import { toast } from "sonner";
 import { Shield, ChevronRight, Lock, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus }) => {
+const PermissionModal = ({
+  isOpen,
+  onClose,
+  onSave,
+  permission,
+  positions,
+  menus,
+}) => {
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [searchMenu, setSearchMenu] = useState("");
@@ -28,7 +35,7 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
   useEffect(() => {
     if (permission) {
       setSelectedPosition(permission.PNUM);
-      setSelectedMenus(permission.access.map(menu => menu.MNUM));
+      setSelectedMenus(permission.access.map((menu) => menu.MNUM));
     } else {
       setSelectedPosition("");
       setSelectedMenus([]);
@@ -47,11 +54,11 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
     }
     onSave({
       position: selectedPosition,
-      selectedMenus: selectedMenus
+      selectedMenus: selectedMenus,
     });
   };
 
-  const filteredMenus = menus.filter(menu => 
+  const filteredMenus = menus.filter((menu) =>
     menu.MNAME.toLowerCase().includes(searchMenu.toLowerCase())
   );
 
@@ -59,7 +66,7 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
     if (selectedMenus.length === menus.length) {
       setSelectedMenus([]);
     } else {
-      setSelectedMenus(menus.map(menu => menu.MNUMBER));
+      setSelectedMenus(menus.map((menu) => menu.MNUMBER));
     }
   };
 
@@ -85,7 +92,10 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
         <div className="px-8 py-6 space-y-8">
           <div className="space-y-6">
             <div className="space-y-3">
-              <Label htmlFor="position" className="text-base font-semibold text-gray-700 flex items-center gap-2">
+              <Label
+                htmlFor="position"
+                className="text-base font-semibold text-gray-700 flex items-center gap-2"
+              >
                 <Lock className="h-4 w-4 text-primary" />
                 ตำแหน่ง
               </Label>
@@ -99,8 +109,8 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
                 </SelectTrigger>
                 <SelectContent className="border-none shadow-xl">
                   {positions.map((pos) => (
-                    <SelectItem 
-                      key={pos.PNUMBER} 
+                    <SelectItem
+                      key={pos.PNUMBER}
                       value={pos.PNUMBER}
                       className="hover:bg-primary/5 cursor-pointer focus:bg-primary/5"
                     >
@@ -127,7 +137,9 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
                   onClick={handleSelectAll}
                   className="text-xs hover:bg-primary/5"
                 >
-                  {selectedMenus.length === menus.length ? "ยกเลิกทั้งหมด" : "เลือกทั้งหมด"}
+                  {selectedMenus.length === menus.length
+                    ? "ยกเลิกทั้งหมด"
+                    : "เลือกทั้งหมด"}
                 </Button>
               </div>
 
@@ -143,8 +155,8 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
 
               <div className="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
                 {filteredMenus.map((menu) => (
-                  <div 
-                    key={menu.MNUMBER} 
+                  <div
+                    key={menu.MNUMBER}
                     className={`flex items-center space-x-3 p-4 rounded-xl border transition-all duration-200 ${
                       selectedMenus.includes(menu.MNUMBER)
                         ? "border-primary/20 bg-primary/5 shadow-sm"
@@ -158,12 +170,14 @@ const PermissionModal = ({ isOpen, onClose, onSave, permission, positions, menus
                         if (checked) {
                           setSelectedMenus([...selectedMenus, menu.MNUMBER]);
                         } else {
-                          setSelectedMenus(selectedMenus.filter(id => id !== menu.MNUMBER));
+                          setSelectedMenus(
+                            selectedMenus.filter((id) => id !== menu.MNUMBER)
+                          );
                         }
                       }}
                       className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
-                    <Label 
+                    <Label
                       htmlFor={`menu-${menu.MNUMBER}`}
                       className="text-sm cursor-pointer select-none font-medium"
                     >

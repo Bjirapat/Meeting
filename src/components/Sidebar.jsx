@@ -85,7 +85,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
     },
   ];
 
-  // กรองเมนูตามสิทธิ์การเข้าถึง
   const filteredMenuItems = menuItems.filter((item) =>
     hasPermission(item.mnum)
   );

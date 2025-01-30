@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
@@ -10,7 +10,9 @@ export const LoadingState = () => (
           <Loader2 className="h-12 w-12 animate-spin text-purple-600" />
           <div className="absolute inset-0 h-12 w-12 animate-ping bg-purple-400 rounded-full opacity-20" />
         </div>
-        <p className="text-gray-600 mt-4 font-medium">กำลังตรวจสอบสถานะห้อง...</p>
+        <p className="text-gray-600 mt-4 font-medium">
+          กำลังตรวจสอบสถานะห้อง...
+        </p>
       </CardContent>
     </Card>
   </div>

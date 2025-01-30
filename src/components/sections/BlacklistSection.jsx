@@ -33,7 +33,6 @@ const BlacklistSection = () => {
   const [unlockDialogOpen, setUnlockDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ที่ถูกบัญชีดำ
   const fetchBlacklistedUsers = async () => {
     try {
       const response = await axios.get("http://localhost:8080/blacklist");
@@ -48,7 +47,6 @@ const BlacklistSection = () => {
     fetchBlacklistedUsers();
   }, []);
 
-  // ฟังก์ชันสำหรับปลดล็อคผู้ใช้
   const handleUnlockUser = async () => {
     try {
       const response = await axios.post(
@@ -56,7 +54,6 @@ const BlacklistSection = () => {
       );
 
       if (response.data.success) {
-        // แสดงข้อความแจ้งเตือนว่าปลดล็อคสำเร็จ
         toast.success("ปลดล็อคบัญชีดำสำเร็จ");
         fetchBlacklistedUsers();
         setUnlockDialogOpen(false);
@@ -68,15 +65,14 @@ const BlacklistSection = () => {
       toast.error("ไม่สามารถปลดล็อคบัญชีดำได้");
     }
   };
-  // กรองผู้ใช้ที่ถูกบัญชีดำตามคำค้นหา
+
   const filteredUsers = blacklistedUsers
     .filter((user) =>
-      // เช็คว่า value ของ user ใด ๆ มีคำค้นหาหรือไม่
       Object.values(user).some((value) =>
         value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
     )
-    // เรียงลำดับผู้ใช้ตาม LOCKEMPID
+
     .sort((a, b) => a.LOCKEMPID - b.LOCKEMPID);
   const tableVariants = {
     hidden: { opacity: 0 },

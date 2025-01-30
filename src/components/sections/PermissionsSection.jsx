@@ -40,7 +40,7 @@ import {
 import PermissionModal from "../modals/PermissionModal";
 import axios from "axios";
 const API_URL = "http://localhost:8080";
-// Animation variants
+
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -84,72 +84,65 @@ const PermissionsSection = () => {
     fetchData();
   }, []);
 
-  // ฟังก์ชันสำหรับดึงข้อมูลจาก API
   const fetchData = async () => {
     try {
-      // ใช้ Promise.all เพื่อเรียก API พร้อมกัน
       const [accessMenusRes, positionsRes, menusRes] = await Promise.all([
-        axios.get(`${API_URL}/accessmenus`), // เรียกข้อมูลเมนูการเข้าถึง
-        axios.get(`${API_URL}/positions`), // เรียกข้อมูลตำแหน่ง
-        axios.get(`${API_URL}/menus`), // เรียกข้อมูลเมนู
+        axios.get(`${API_URL}/accessmenus`),
+        axios.get(`${API_URL}/positions`),
+        axios.get(`${API_URL}/menus`),
       ]);
 
-      // จัดกลุ่มข้อมูลสิทธิ์ตาม PNUM
       const groupedPermissions = {};
       accessMenusRes.data.forEach((item) => {
         if (!groupedPermissions[item.PNUM]) {
-          // หากยังไม่มีการกำหนด PNUM นี้ ให้สร้างรายการใหม่
           groupedPermissions[item.PNUM] = {
             PNUM: item.PNUM,
             PNAME: item.PNAME,
-            access: [], // สร้าง array สำหรับเก็บข้อมูลการเข้าถึง
+            access: [],
           };
         }
-        // เพิ่มเมนูการเข้าถึงลงในรายการ
+
         groupedPermissions[item.PNUM].access.push({
           MNUM: item.MNUM,
           MNAME: item.MNAME,
         });
       });
 
-      // ตั้งค่าข้อมูลสิทธิ์และตำแหน่ง
-      setPermissions(Object.values(groupedPermissions)); // แปลงอ็อบเจ็กต์เป็นอาร์เรย์
-      setPositions(positionsRes.data); // ตั้งค่าตำแหน่ง
-      setMenus(menusRes.data); // ตั้งค่าเมนู
+      setPermissions(Object.values(groupedPermissions));
+      setPositions(positionsRes.data);
+      setMenus(menusRes.data);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("เกิดข้อผิดพลาดในการดึงข้อมูล");
     }
   };
 
-  // ฟังก์ชันสำหรับเปิด Modal เพื่อเพิ่มสิทธิ์
   const handleAddPermission = () => {
-    setEditingPermission(null); // รีเซ็ตการแก้ไข
-    setIsModalOpen(true); // เปิด Modal
-  };
-  // ฟังก์ชันสำหรับเปิดกล่องโต้ตอบการแก้ไข
-  const handleEditClick = (permission) => {
-    setSelectedPermission(permission); // ตั้งค่าการเลือกสิทธิ์
-    setShowEditDialog(true);
-  };
-  // ฟังก์ชันสำหรับเปิดกล่องโต้ตอบการลบ
-  const handleDeleteClick = (permission) => {
-    setSelectedPermission(permission); // ตั้งค่าการเลือกสิทธิ์
-    setShowDeleteDialog(true);
-  };
-  // ฟังก์ชันสำหรับยืนยันการแก้ไข
-  const handleEditConfirm = () => {
-    setShowEditDialog(false); // ปิดกล่องโต้ตอบการแก้ไข
-    setEditingPermission(selectedPermission); // ตั้งค่าสิทธิ์ที่จะแก้ไข
-    setIsModalOpen(true); // เปิด Modal เพื่อแก้ไข
+    setEditingPermission(null);
+    setIsModalOpen(true);
   };
 
-  // ฟังก์ชันสำหรับยืนยันการลบ
+  const handleEditClick = (permission) => {
+    setSelectedPermission(permission);
+    setShowEditDialog(true);
+  };
+
+  const handleDeleteClick = (permission) => {
+    setSelectedPermission(permission);
+    setShowDeleteDialog(true);
+  };
+
+  const handleEditConfirm = () => {
+    setShowEditDialog(false);
+    setEditingPermission(selectedPermission);
+    setIsModalOpen(true);
+  };
+
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(
         `${API_URL}/accessmenus/position/${selectedPermission.PNUM}`
-      ); // ทำการลบสิทธิ์จาก API
+      );
       fetchData();
       toast.success("ลบสิทธิ์สำเร็จ");
       setShowDeleteDialog(false);
@@ -159,22 +152,20 @@ const PermissionsSection = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับการกรองข้อมูลสิทธิ์ตามคำค้นหา
   const filteredPermissions = permissions.filter((permission) => {
-    const searchLower = searchTerm.toLowerCase(); // แปลงคำค้นหาเป็นตัวพิมพ์เล็ก
-    const positionMatch = permission.PNAME.toLowerCase().includes(searchLower); // ตรวจสอบว่าชื่อตำแหน่งตรงกับคำค้นหาหรือไม่
-    const menuMatch = permission.access.some(
-      (menu) => menu.MNAME.toLowerCase().includes(searchLower) // ตรวจสอบว่าเมนูการเข้าถึงตรงกับคำค้นหาหรือไม่
+    const searchLower = searchTerm.toLowerCase();
+    const positionMatch = permission.PNAME.toLowerCase().includes(searchLower);
+    const menuMatch = permission.access.some((menu) =>
+      menu.MNAME.toLowerCase().includes(searchLower)
     );
-    return positionMatch || menuMatch; // คืนค่าความจริงถ้าตรงกัน
+    return positionMatch || menuMatch;
   });
 
-  // ฟังก์ชันสำหรับบันทึกสิทธิ์ใหม่หรืออัปเดตสิทธิ์ที่มีอยู่
   const handleSavePermission = async (data) => {
     try {
-      const { position, selectedMenus } = data; // ดึงตำแหน่งและเมนูที่เลือกจากข้อมูล
+      const { position, selectedMenus } = data;
       const positionExists = permissions.some(
-        (permission) => permission.PNUM === position // ตรวจสอบว่าตำแหน่งนี้มีอยู่แล้วหรือไม่
+        (permission) => permission.PNUM === position
       );
       if (!editingPermission && positionExists) {
         toast.error("มีการกำหนดสิทธิ์ตำเเหน่งนี้เเล้ว");
@@ -360,7 +351,7 @@ const PermissionsSection = () => {
         positions={positions}
         menus={menus}
       />
-      {/* Edit Confirmation Dialog */}
+
       <AlertDialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <AlertDialogContent className="max-w-[400px]">
           <AlertDialogHeader>
@@ -389,7 +380,7 @@ const PermissionsSection = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      {/* Delete Confirmation Dialog */}
+
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent className="max-w-[400px]">
           <AlertDialogHeader>

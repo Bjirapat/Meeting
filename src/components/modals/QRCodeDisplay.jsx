@@ -24,7 +24,11 @@ export const QRCodeDisplay = ({ booking }) => {
           <Sparkles className="absolute -top-3 -left-3 w-8 h-8 text-blue-500 animate-pulse" />
         </div>
       </div>
-      <QRCodeActions qrRef={qrRef} booking={booking} qrContent={confirmationUrl} />
+      <QRCodeActions
+        qrRef={qrRef}
+        booking={booking}
+        qrContent={confirmationUrl}
+      />
       <div className="text-sm text-gray-500 text-center mt-2">
         <p>URL: {confirmationUrl}</p>
       </div>

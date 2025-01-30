@@ -73,8 +73,8 @@ const AccessSection = () => {
         console.error("Error checking room status:", error);
       }
     }, 60000);
-    return () => clearInterval(statusCheckInterval); // ล้างการตั้งเวลาเมื่อส่วนประกอบถูกลบ
-  }, []); // พึ่งพา empty array เพื่อทำงานเพียงครั้งเดียว
+    return () => clearInterval(statusCheckInterval);
+  }, []);
 
   const fetchAccessRecords = async () => {
     try {
@@ -90,7 +90,6 @@ const AccessSection = () => {
     }
   };
 
-  // ฟังก์ชันเพื่อแสดงเหตุผลการยกเลิก
   const handleShowCancelReason = async (booking) => {
     try {
       const response = await fetch(
@@ -113,14 +112,12 @@ const AccessSection = () => {
     }
   };
 
-  // ฟังก์ชันเมื่อคลิกที่การยกเลิกการจอง
   const handleCancelClick = (booking) => {
-    setSelectedBooking(booking); // ตั้งค่าการจองที่เลือก
-    setCancelReason(""); // รีเซ็ตเหตุผลการยกเลิก
+    setSelectedBooking(booking);
+    setCancelReason("");
     setCancelDialogOpen(true);
   };
 
-  // ฟังก์ชันเพื่อดำเนินการยกเลิกการจอง
   const handleCancelBooking = async () => {
     if (!cancelReason.trim()) {
       toast.error("กรุณาระบุเหตุผลในการยกเลิก");
@@ -135,8 +132,8 @@ const AccessSection = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            reason: cancelReason, // ส่งเหตุผลการยกเลิก
-            empId: user?.ssn || "", // ส่ง ID ของผู้ใช้
+            reason: cancelReason,
+            empId: user?.ssn || "",
           }),
         }
       );
@@ -157,22 +154,20 @@ const AccessSection = () => {
     }
   };
 
-  // สถานะสำหรับกล่องโต้ตอบการอนุมัติ
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
-  // สถานะสำหรับการจองที่ต้องการอนุมัติ
+
   const [bookingToApprove, setBookingToApprove] = useState(null);
-  // ฟังก์ชันเมื่อคลิกที่การอนุมัติการจอง
+
   const handleApproveClick = (booking) => {
     setBookingToApprove(booking);
     setApproveDialogOpen(true);
   };
 
-  // ฟังก์ชันเพื่อดำเนินการอนุมัติการจอง
   const handleApproveBooking = async () => {
     try {
       const response = await fetch(
         `http://localhost:8080/approve/${bookingToApprove.RESERVERID}/${bookingToApprove.CFRNUM}`,
-        { method: "POST" } 
+        { method: "POST" }
       );
       if (!response.ok) throw new Error("Failed to approve booking");
       const data = await response.json();
@@ -295,7 +290,7 @@ const AccessSection = () => {
       .querySelector(".rounded-md.border")
       .scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  // Animation variants
+
   const tableVariants = {
     hidden: { opacity: 0 },
     show: {

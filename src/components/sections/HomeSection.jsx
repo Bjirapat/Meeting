@@ -38,35 +38,31 @@ const fetchRoomStats = async () => {
   const totalRooms = rooms.length;
   const availableRooms = totalRooms - activeBookings;
 
-  // คำนวณอัตราการใช้งานที่แท้จริงจากการจองที่เสร็จสมบูรณ์
   const totalBookings = bookings.length;
   const completedBookings = bookings.filter(
     (booking) => booking.STUBOOKING === 3
   ).length;
-  // คำนวณอัตราการใช้งาน
+
   const utilizationRate =
-    totalBookings > 0 ? (completedBookings / totalBookings) * 100 : 0; // คำนวณเป็นเปอร์เซ็นต์
+    totalBookings > 0 ? (completedBookings / totalBookings) * 100 : 0;
 
   return {
     totalRooms,
     totalMembers: members.length,
     availableRooms,
-    utilizationRate: Math.round(utilizationRate * 10) / 10, // ปัดเศษอัตราการใช้งาน
+    utilizationRate: Math.round(utilizationRate * 10) / 10,
   };
 };
 
-// ฟังก์ชันสำหรับดึงประวัติการจอง
 const fetchBookingHistory = async () => {
   const response = await axios.get(`${API_URL}/history`);
 
-  // ประมวลผลข้อมูลให้เป็นรูปแบบที่ต้องการ
   const processedData = response.data.reduce((acc, booking) => {
     const date = new Date(booking.BDATE).toLocaleDateString();
     acc[date] = (acc[date] || 0) + 1;
     return acc;
   }, {});
 
-  // แปลงข้อมูลกลับเป็นอาร์เรย์และเรียงลำดับตามวันที่
   return Object.entries(processedData)
     .map(([date, count]) => ({
       BDATE: date,
@@ -264,12 +260,12 @@ const HomeSection = () => {
       </motion.div>
       <div className="container mx-auto max-w-6xl px-4 -mt-20">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-12">
-            <StatCard
-              title="ห้องประชุมทั้งหมด"
-              value={currentStats.totalRooms}
-              icon={Building2}
-              index={0}
-            />
+          <StatCard
+            title="ห้องประชุมทั้งหมด"
+            value={currentStats.totalRooms}
+            icon={Building2}
+            index={0}
+          />
           <StatCard
             title="จำนวนสมาชิก"
             value={currentStats.totalMembers}

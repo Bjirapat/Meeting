@@ -76,7 +76,6 @@
   }
 }
 
-/* Custom styles for inputs */
 input,
 select,
 textarea {
@@ -84,7 +83,6 @@ textarea {
 }
 
 @keyframes twinkle {
-
   0%,
   100% {
     opacity: 1;
@@ -96,7 +94,6 @@ textarea {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);

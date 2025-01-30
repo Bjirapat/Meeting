@@ -49,36 +49,30 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 const API_URL = "http://localhost:8080";
 const ITEMS_PER_PAGE = 10;
 
-// ฟังก์ชันสำหรับดึงข้อมูลห้องประชุมทั้งหมดจาก API
 const fetchRooms = async () => {
-  const response = await axios.get(`${API_URL}/room`); // ส่งคำขอ GET ไปยัง endpoint สำหรับห้องประชุม
-  return response.data; // ส่งคืนข้อมูลห้องประชุมจากการตอบกลับ
+  const response = await axios.get(`${API_URL}/room`);
+  return response.data;
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลอาคารทั้งหมดจาก API
 const fetchBuildings = async () => {
-  const response = await axios.get(`${API_URL}/buildings`); // ส่งคำขอ GET ไปยัง endpoint สำหรับอาคาร
-  return response.data; // ส่งคืนข้อมูลอาคารจากการตอบกลับ
+  const response = await axios.get(`${API_URL}/buildings`);
+  return response.data;
 };
 
-// ฟังก์ชันสำหรับดึงประเภทห้องทั้งหมดจาก API
 const fetchRoomtypes = async () => {
-  const response = await axios.get(`${API_URL}/roomtypes`); // ส่งคำขอ GET ไปยัง endpoint สำหรับประเภทห้อง
-  return response.data; // ส่งคืนข้อมูลประเภทห้องจากการตอบกลับ
+  const response = await axios.get(`${API_URL}/roomtypes`);
+  return response.data;
 };
 
-// ฟังก์ชันสำหรับดึงสถานะห้องทั้งหมดจาก API
 const fetchStatusrooms = async () => {
-  const response = await axios.get(`${API_URL}/statusrooms`); // ส่งคำขอ GET ไปยัง endpoint สำหรับสถานะห้อง
-  return response.data; // ส่งคืนข้อมูลสถานะห้องจากการตอบกลับ
+  const response = await axios.get(`${API_URL}/statusrooms`);
+  return response.data;
 };
 
-// ฟังก์ชันสำหรับจัดรูปแบบ ID ให้มี 3 หลัก เช่น 1 จะถูกแปลงเป็น "001"
 const formatID = (id) => {
-  return id.toString().padStart(3, "0"); // แปลง ID เป็น string และเติม 0 ด้านหน้าถ้าจำนวนน้อยกว่า 3 หลัก
+  return id.toString().padStart(3, "0");
 };
 
-// คอมโพเนนต์สำหรับแสดงข้อมูลห้องประชุม
 const RoomsSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRoom, setEditingRoom] = useState(null);
@@ -91,127 +85,108 @@ const RoomsSection = () => {
     data: null,
   });
 
-  // กำหนดสีสำหรับสถานะต่าง ๆ
   const statusColors = {
-    1: "bg-green-100 text-green-800", // สีสำหรับสถานะ "พร้อมใช้งาน"
-    2: "bg-yellow-100 text-yellow-800", // สีสำหรับสถานะ "ชำรุด"
-    3: "bg-red-100 text-red-800", // สีสำหรับสถานะ "ปิดให้บริการ"
+    1: "bg-green-100 text-green-800",
+    2: "bg-yellow-100 text-yellow-800",
+    3: "bg-red-100 text-red-800",
   };
 
-  // สถานะห้อง
   const statusMap = {
     1: "พร้อมใช้งาน",
     2: "ชำรุด",
     3: "ปิดให้บริการ",
   };
 
-  // สถานะสำหรับข้อมูลฟอร์มที่ใช้เพิ่มหรือแก้ไขห้องประชุม
   const [formData, setFormData] = useState({
-    CFRNAME: "", // ชื่อห้อง
-    BDNUM: "", // หมายเลขอาคาร
-    FLNUM: "", // หมายเลขชั้น
-    RTNUM: "", // หมายเลขประเภทห้อง
-    STUROOM: "", // สถานะห้อง
-    CAPACITY: "", // ความจุของห้อง
+    CFRNAME: "",
+    BDNUM: "",
+    FLNUM: "",
+    RTNUM: "",
+    STUROOM: "",
+    CAPACITY: "",
   });
 
-  // สร้าง query client สำหรับจัดการสถานะการดึงข้อมูล
   const queryClient = useQueryClient();
 
-  // ดึงข้อมูลห้องประชุม
   const { data: rooms = [], isLoading: isLoadingRooms } = useQuery({
-    queryKey: ["rooms"], // กุญแจสำหรับการดึงข้อมูล
-    queryFn: fetchRooms, // ฟังก์ชันสำหรับดึงข้อมูลห้อง
+    queryKey: ["rooms"],
+    queryFn: fetchRooms,
   });
 
-  // ดึงข้อมูลอาคาร
   const { data: buildings = [] } = useQuery({
-    queryKey: ["buildings"], // กุญแจสำหรับการดึงข้อมูล
-    queryFn: fetchBuildings, // ฟังก์ชันสำหรับดึงข้อมูลอาคาร
+    queryKey: ["buildings"],
+    queryFn: fetchBuildings,
   });
 
-  // ดึงข้อมูลประเภทห้อง
   const { data: roomtypes = [] } = useQuery({
-    queryKey: ["roomtypes"], // กุญแจสำหรับการดึงข้อมูล
-    queryFn: fetchRoomtypes, // ฟังก์ชันสำหรับดึงข้อมูลประเภทห้อง
+    queryKey: ["roomtypes"],
+    queryFn: fetchRoomtypes,
   });
 
-  // ดึงข้อมูลสถานะห้อง
   const { data: statusrooms = [] } = useQuery({
-    queryKey: ["statusrooms"], // กุญแจสำหรับการดึงข้อมูล
-    queryFn: fetchStatusrooms, // ฟังก์ชันสำหรับดึงข้อมูลสถานะห้อง
+    queryKey: ["statusrooms"],
+    queryFn: fetchStatusrooms,
   });
 
-  // ใช้ useEffect เพื่อตรวจสอบและดึงข้อมูลชั้นเมื่อเลือกอาคาร
   useEffect(() => {
     const fetchFloors = async () => {
       if (formData.BDNUM) {
-        // ถ้ามีหมายเลขอาคาร
         try {
           const response = await axios.get(
-            `${API_URL}/floors?buildingId=${formData.BDNUM}` // ส่งคำขอ GET สำหรับชั้นในอาคารที่เลือก
+            `${API_URL}/floors?buildingId=${formData.BDNUM}`
           );
-          setFloors(response.data); // ตั้งค่าสถานะชั้นด้วยข้อมูลที่ดึงมา
+          setFloors(response.data);
         } catch (error) {
           console.error("Error fetching floors:", error);
           toast.error("ไม่สามารถดึงข้อมูลชั้นได้");
         }
       } else {
-        setFloors([]); // ถ้าไม่มีหมายเลขอาคาร ให้ตั้งค่าสถานะชั้นเป็นว่าง
+        setFloors([]);
       }
     };
-    fetchFloors(); // เรียกฟังก์ชันเพื่อดึงข้อมูลชั้น
-  }, [formData.BDNUM]); // ดำเนินการทุกครั้งเมื่อ BDNUM เปลี่ยนแปลง
+    fetchFloors();
+  }, [formData.BDNUM]);
 
-  // Reset ชั้นเมื่อเปลี่ยนอาคาร
   useEffect(() => {
     if (formData.BDNUM) {
-      // ถ้ามีหมายเลขอาคาร
-      setFormData((prev) => ({ ...prev, FLNUM: "" })); // ตั้งค่า FLNUM เป็นว่าง
+      setFormData((prev) => ({ ...prev, FLNUM: "" }));
     }
-  }, [formData.BDNUM]); // ดำเนินการทุกครั้งเมื่อ BDNUM เปลี่ยนแปลง
+  }, [formData.BDNUM]);
 
-  // จัดเรียงห้องประชุมตามหมายเลขห้อง
   const sortedRooms = useMemo(() => {
     return [...rooms].sort(
-      (a, b) => parseInt(a.CFRNUMBER) - parseInt(b.CFRNUMBER) // จัดเรียงห้องโดยเปรียบเทียบ CFRNUMBER
+      (a, b) => parseInt(a.CFRNUMBER) - parseInt(b.CFRNUMBER)
     );
-  }, [rooms]); // จัดการเมื่อ rooms เปลี่ยนแปลง
+  }, [rooms]);
 
-  // กรองห้องประชุมตามคำค้นหา
   const filteredRooms = useMemo(() => {
     return sortedRooms.filter((room) =>
-      Object.values(room).some(
-        (value) =>
-          value?.toString().toLowerCase().includes(searchTerm.toLowerCase()) // ตรวจสอบว่าค่าของห้องประชุมมีคำค้นหาหรือไม่
+      Object.values(room).some((value) =>
+        value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [sortedRooms, searchTerm]); // จัดการเมื่อ sortedRooms หรือ searchTerm เปลี่ยนแปลง
+  }, [sortedRooms, searchTerm]);
 
-  // คำนวณจำนวนหน้าจากจำนวนห้องที่กรอง
-  const totalPages = Math.ceil(filteredRooms.length / ITEMS_PER_PAGE); // คำนวณจำนวนหน้าที่ต้องแสดง
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE; // คำนวณ เริ่มต้นสำหรับการแสดงห้องประชุมในหน้าปัจจุบัน
+  const totalPages = Math.ceil(filteredRooms.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedRooms = filteredRooms.slice(
-    // ตัดสินใจแสดงห้องประชุมตามหน้า
     startIndex,
     startIndex + ITEMS_PER_PAGE
   );
 
-  // ฟังก์ชันสำหรับเปลี่ยนหน้า
   const handlePageChange = (page) => {
-    setCurrentPage(page); // ตั้งค่าหน้าปัจจุบัน
+    setCurrentPage(page);
     document
-      .querySelector(".rounded-md.border") // เลือกองค์ประกอบที่ต้องการเลื่อน
-      ?.scrollIntoView({ behavior: "smooth", block: "start" }); // เลื่อนหน้าไปยังตำแหน่งที่ต้องการ
+      .querySelector(".rounded-md.border")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // ฟังก์ชันสำหรับเพิ่มห้องประชุม
   const addRoomMutation = useMutation({
-    mutationFn: (newRoom) => axios.post(`${API_URL}/addroom`, newRoom), // ส่งคำขอ POST เพื่อเพิ่มห้องประชุมใหม่
+    mutationFn: (newRoom) => axios.post(`${API_URL}/addroom`, newRoom),
     onSuccess: () => {
-      queryClient.invalidateQueries("rooms"); // อัปเดตข้อมูลห้องประชุมหลังจากเพิ่มห้องใหม่สำเร็จ
+      queryClient.invalidateQueries("rooms");
       toast.success("เพิ่มห้องประชุมสำเร็จ");
-      setIsModalOpen(false); // ปิด Modal หลังจากเพิ่มห้องสำเร็จ
+      setIsModalOpen(false);
     },
     onError: (error) => {
       toast.error("ไม่สามารถเพิ่มห้องประชุมได้: " + error.message);
@@ -276,7 +251,6 @@ const RoomsSection = () => {
   };
 
   const handleSaveRoom = (roomData) => {
-    // เช็คว่ากรอกข้อมูลครบทุกอย่างไหม
     if (
       !roomData.CFRNAME ||
       !roomData.BDNUM ||
@@ -296,18 +270,14 @@ const RoomsSection = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับการจัดการการลบห้องประชุม
   const handleDeleteRoom = () => {
-    deleteRoomMutation.mutate(dialogState.data.CFRNUMBER); // เรียกใช้ฟังก์ชันลบห้องประชุม
+    deleteRoomMutation.mutate(dialogState.data.CFRNUMBER);
   };
 
-  // ฟังก์ชันสำหรับการจัดการการเปลี่ยนแปลงค่าฟอร์ม
   const handleChange = (field, value) => {
-    // ดึงชื่อและค่า
-    setFormData((prev) => ({ ...prev, [field]: value })); // ตั้งค่าฟอร์มใหม่
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Animation variants
   const tableVariants = {
     hidden: { opacity: 0 },
     show: {

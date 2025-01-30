@@ -1,18 +1,15 @@
 import React from "react";
 import { QRCodeSVG } from "qrcode.react";
 
-// สร้างคอมโพเนนต์ QRCodeGenerator ที่รับ props bookingData
 const QRCodeGenerator = ({ bookingData }) => {
-  // เช็คว่า bookingData มีข้อมูลหรือไม่ หากไม่มีให้คืนค่า null
   if (!bookingData) return null;
 
-  // สร้างข้อมูลสำหรับ QR Code โดยการแปลงข้อมูล bookingData เป็น JSON String
   const qrCodeData = JSON.stringify({
-    reserverId: bookingData.RESERVERID, // ID ผู้จองห้อง
-    roomCode: bookingData.CFRNUM, // รหัสห้อง
-    date: bookingData.BDATE, // วันที่จอง
-    startTime: bookingData.STARTTIME, // เวลาที่เริ่ม
-    endTime: bookingData.ENDTIME, // เวลาที่สิ้นสุด
+    reserverId: bookingData.RESERVERID,
+    roomCode: bookingData.CFRNUM,
+    date: bookingData.BDATE,
+    startTime: bookingData.STARTTIME,
+    endTime: bookingData.ENDTIME,
   });
 
   return (

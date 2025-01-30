@@ -32,13 +32,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // TODO: Implement actual user authentication check
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) {
       navigate("/");
     }
-    // TODO: Fetch user data from Oracle SQL database
-    // Example: fetchUserData(user.id).then(data => setUserData(data));
   }, [navigate]);
 
   const handleSectionChange = (section) => {
@@ -46,7 +43,6 @@ const Dashboard = () => {
   };
 
   const handleLogout = () => {
-    // TODO: Implement logout logic (clear session, tokens, etc.)
     localStorage.removeItem("user");
     navigate("/");
   };
@@ -98,7 +94,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar for admin */}
       {isSidebarOpen && (
         <Sidebar
           activeSection={activeSection}
@@ -115,7 +110,6 @@ const Dashboard = () => {
           userData={userData}
         />
 
-        {/* User menu for mobile */}
         {isUserMenuOpen && (
           <div className="lg:hidden bg-white shadow-md absolute top-16 right-0 w-64 z-50">
             {userMenuItems.map((item) => (
@@ -146,7 +140,6 @@ const Dashboard = () => {
         </main>
       </div>
 
-      {/* User menu for desktop */}
       {userData.role === "user" && (
         <div className="hidden lg:flex flex-col bg-white shadow-md w-64 p-4">
           <div className="flex items-center mb-6">

@@ -29,15 +29,14 @@ const ContactInfo = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchContacts(); // เรียกฟังก์ชันเพื่อดึงข้อมูลผู้ติดต่อ
+    fetchContacts();
   }, []);
 
-  // ฟังก์ชันสำหรับดึงข้อมูลผู้ติดต่อจาก API
   const fetchContacts = async () => {
     try {
       setIsLoading(true);
       const response = await axios.get("http://localhost:8080/contacts");
-      setContacts(response.data); // ตั้งค่าผู้ติดต่อจากข้อมูลที่ได้
+      setContacts(response.data);
     } catch (error) {
       toast.error("ไม่สามารถดึงข้อมูลการติดต่อได้", {
         description: "กรุณาลองใหม่อีกครั้ง",
@@ -47,7 +46,6 @@ const ContactInfo = () => {
     }
   };
 
-  // ฟิลเตอร์ข้อมูลผู้ติดต่อโดยใช้คำค้นหา
   const filteredContacts = contacts.filter(
     (contact) =>
       contact.ESSN.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,7 +72,6 @@ const ContactInfo = () => {
         className="max-w-7xl mx-auto"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Left Panel - Contact List */}
           <div className="md:col-span-5 lg:col-span-4">
             <Card className="shadow-lg border-0 overflow-hidden">
               <CardHeader className="space-y-4 border-b bg-white/50 backdrop-blur supports-[backdrop-filter]:bg-white/50">
@@ -154,7 +151,6 @@ const ContactInfo = () => {
             </Card>
           </div>
 
-          {/* Right Panel - Contact Details */}
           <div className="md:col-span-7 lg:col-span-8">
             <Card className="shadow-lg border-0">
               {selectedContact ? (

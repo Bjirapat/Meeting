@@ -37,40 +37,40 @@ import {
 } from "../ui/select";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// กำหนด URL ของ API และจำนวนรายการที่จะแสดงต่อหน้า
+
 const API_URL = "http://localhost:8080";
 const ITEMS_PER_PAGE = 10;
-// ฟังก์ชันสำหรับดึงข้อมูลสมาชิกจาก API
+
 const fetchMembers = async () => {
   const response = await axios.get(`${API_URL}/members`);
   return response.data;
 };
-// ฟังก์ชันสำหรับดึงข้อมูลแผนก
+
 const fetchDepartments = async () => {
   const response = await axios.get(`${API_URL}/departments`);
   return response.data;
 };
-// ฟังก์ชันสำหรับดึงข้อมูลตำแหน่ง
+
 const fetchPositions = async () => {
   const response = await axios.get(`${API_URL}/positions`);
   return response.data;
 };
-// ฟังก์ชันสำหรับดึงข้อมูลสถานะการทำงานของพนักงาน
+
 const fetchStatusEmps = async () => {
   const response = await axios.get(`${API_URL}/statusemps`);
   return response.data;
 };
-// ฟังก์ชันแปลง ID ให้เป็นรูปแบบตัวเลข 3 หลัก เช่น 001, 002
+
 const formatID = (id) => {
   return id.toString().padStart(3, "0");
 };
-// MembersSection component เป็นหน้าที่แสดงรายชื่อสมาชิก
+
 const MembersSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingMember, setEditingMember] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  // กำหนด state สำหรับฟอร์มข้อมูลสมาชิกใหม่ที่ต้องการเพิ่มหรือแก้ไข
+
   const [formData, setFormData] = useState({
     FNAME: "",
     LNAME: "",
@@ -79,22 +79,21 @@ const MembersSection = () => {
     DNO: "",
     PNO: "",
     STUEMP: "",
-  }); // Removed SSN since it will be auto-generated
-  // QueryClient สำหรับจัดการ cache ข้อมูล
+  });
   const queryClient = useQueryClient();
-  // กำหนดสีของสถานะการทำงานแต่ละประเภท
+
   const statusColors = {
-    1: "bg-green-100 text-green-800", // ทำงาน
-    2: "bg-red-100 text-red-800", // ลาออก
-    3: "bg-gray-100 text-gray-800", // เกษียณ
+    1: "bg-green-100 text-green-800",
+    2: "bg-red-100 text-red-800",
+    3: "bg-gray-100 text-gray-800",
   };
-  // Map สถานะเพื่อให้แสดงชื่อสถานะในภาษาที่เข้าใจง่าย
+
   const statusMap = {
     1: "ทำงาน",
     2: "ลาออก",
     3: "เกษียณ",
   };
-  // ใช้ useQuery ดึงข้อมูลสมาชิก แผนก ตำแหน่ง และสถานะการทำงาน
+
   const {
     data: members = [],
     isLoading,
@@ -115,11 +114,11 @@ const MembersSection = () => {
     queryKey: ["statusEmps"],
     queryFn: fetchStatusEmps,
   });
-  // เรียงลำดับสมาชิกตาม SSN ก่อนแสดงผล
+
   const sortedMembers = useMemo(() => {
     return [...members].sort((a, b) => a.SSN - b.SSN);
   }, [members]);
-  // กรองข้อมูลสมาชิกตาม search term ที่ผู้ใช้ระบุ
+
   const filteredMembers = useMemo(() => {
     return sortedMembers.filter((member) =>
       Object.values(member).some((value) =>
@@ -127,11 +126,11 @@ const MembersSection = () => {
       )
     );
   }, [sortedMembers, searchTerm]);
-  // คำนวณจำนวนหน้าทั้งหมดของข้อมูลที่กรองแล้ว
+
   const totalPages = Math.ceil(filteredMembers.length / ITEMS_PER_PAGE);
-  // กำหนดดัชนีเริ่มต้นของรายการในหน้าปัจจุบัน
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  // เลือกรายการตามหน้าปัจจุบันที่จะแสดงผลในตาราง
+
   const paginatedMembers = filteredMembers.slice(
     startIndex,
     startIndex + ITEMS_PER_PAGE
@@ -142,7 +141,7 @@ const MembersSection = () => {
       .querySelector(".rounded-md.border")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  // ฟังก์ชันเพิ่มสมาชิกใหม่โดยใช้ useMutation
+
   const addMemberMutation = useMutation({
     mutationFn: (newMember) => axios.post(`${API_URL}/addmembers`, newMember),
     onSuccess: () => {
@@ -153,13 +152,18 @@ const MembersSection = () => {
     },
     onError: (error) => {
       if (error.response?.data?.error === "duplicate_email") {
-        toast.error(error.response.data.message || "อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น");
+        toast.error(
+          error.response.data.message ||
+            "อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น"
+        );
       } else {
-        toast.error(error.response?.data?.message || "เกิดข้อผิดพลาดในการเพิ่มสมาชิก");
+        toast.error(
+          error.response?.data?.message || "เกิดข้อผิดพลาดในการเพิ่มสมาชิก"
+        );
       }
     },
   });
-  // ฟังก์ชันแก้ไขข้อมูลสมาชิกโดยใช้ useMutation
+
   const updateMemberMutation = useMutation({
     mutationFn: (updatedMember) =>
       axios.put(`${API_URL}/updatemembers/${updatedMember.SSN}`, updatedMember),
@@ -184,7 +188,7 @@ const MembersSection = () => {
       );
     },
   });
-  // จัดการการเปลี่ยนแปลงข้อมูลในฟอร์ม
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -192,7 +196,7 @@ const MembersSection = () => {
       [name]: value,
     });
   };
-  // ฟังก์ชัน submit ฟอร์มเพื่อตรวจสอบว่าเป็นการเพิ่มหรือแก้ไข
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const processedData = {
@@ -201,7 +205,7 @@ const MembersSection = () => {
       PNO: Number(formData.PNO),
       STUEMP: Number(formData.STUEMP),
     };
-    
+
     if (editingMember) {
       if (!processedData.PW || processedData.PW.trim() === "") {
         delete processedData.PW;
@@ -212,13 +216,13 @@ const MembersSection = () => {
       addMemberMutation.mutate(processedData);
     }
   };
-  // ฟังก์ชันเริ่มการแก้ไขสมาชิกที่ระบุ
+
   const handleEditClick = (member) => {
     setEditingMember(member);
     setFormData({ ...member, PW: "" });
     setIsModalOpen(true);
   };
-  // ฟังก์ชันรีเซ็ตฟอร์มกลับไปเป็นค่าเริ่มต้น
+
   const resetForm = () => {
     setFormData({
       SSN: "",
@@ -231,10 +235,10 @@ const MembersSection = () => {
       STUEMP: "",
     });
   };
-  // แสดงข้อความระหว่างโหลดข้อมูลหรือเกิดข้อผิดพลาด
+
   if (isLoading) return <div>กำลังโหลด...</div>;
   if (error) return <div>เกิดข้อผิดพลาด: {error.message}</div>;
-  // กำหนดการแสดงผลตารางโดยมีอนิเมชั่น
+
   const tableVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -493,33 +497,33 @@ const MembersSection = () => {
                     </DialogTitle>
                   </DialogHeader>
                   <form onSubmit={handleSubmit}>
-                  {[
-                    "FNAME",
-                    "LNAME",
-                    "EMAIL",
-                    "PW",
-                    "DNO",
-                    "PNO",
-                    "STUEMP",
-                  ].map((key) => (
-                    <div key={key} className="mb-4">
-                      <Label htmlFor={key}>
-                        {key === "FNAME"
-                          ? "ชื่อ"
-                          : key === "LNAME"
-                          ? "นามสกุล"
-                          : key === "EMAIL"
-                          ? "Email"
-                          : key === "PW"
-                          ? "รหัสผ่าน"
-                          : key === "DNO"
-                          ? "แผนก"
-                          : key === "PNO"
-                          ? "ตำแหน่ง"
-                          : key === "STUEMP"
-                          ? "สถานะ"
-                          : key}
-                      </Label>
+                    {[
+                      "FNAME",
+                      "LNAME",
+                      "EMAIL",
+                      "PW",
+                      "DNO",
+                      "PNO",
+                      "STUEMP",
+                    ].map((key) => (
+                      <div key={key} className="mb-4">
+                        <Label htmlFor={key}>
+                          {key === "FNAME"
+                            ? "ชื่อ"
+                            : key === "LNAME"
+                            ? "นามสกุล"
+                            : key === "EMAIL"
+                            ? "Email"
+                            : key === "PW"
+                            ? "รหัสผ่าน"
+                            : key === "DNO"
+                            ? "แผนก"
+                            : key === "PNO"
+                            ? "ตำแหน่ง"
+                            : key === "STUEMP"
+                            ? "สถานะ"
+                            : key}
+                        </Label>
                         {key === "DNO" ? (
                           <Select
                             value={formData.DNO}

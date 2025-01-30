@@ -54,25 +54,18 @@ const RoomModal = ({ isOpen, onClose, onSave, room }) => {
     }));
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   onSave(formData);
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (room) {
-        // แก้ไขข้อมูลห้อง
         await axios.put(`http://localhost:8080/room/${formData.id}`, formData);
       } else {
-        // สร้างห้องใหม่
         await axios.post("http://localhost:8080/room", formData);
       }
       onSave(formData);
-      onClose(); // ปิดโมดัล
+      onClose();
     } catch (error) {
       console.error("Error saving room:", error);
-      // แจ้งเตือนผู้ใช้ว่ามีข้อผิดพลาด
     }
   };
 

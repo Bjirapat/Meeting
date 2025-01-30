@@ -126,19 +126,7 @@ const MemberModal = ({ isOpen, onClose, onSave, member }) => {
                 required
               />
             </div>
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="position" className="text-right">
-                ตำแหน่ง
-              </Label>
-              <Input
-                id="position"
-                name="position"
-                value={formData.position}
-                onChange={handleChange}
-                className="col-span-3"
-                required
-              />
-            </div> */}
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="position" className="text-right">
                 ตำแหน่ง
@@ -163,19 +151,6 @@ const MemberModal = ({ isOpen, onClose, onSave, member }) => {
               </Select>
             </div>
 
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="department" className="text-right">
-                แผนก
-              </Label>
-              <Input
-                id="department"
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                className="col-span-3"
-                required
-              />
-            </div> */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="department" className="text-right">
                 แผนก

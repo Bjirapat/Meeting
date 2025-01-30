@@ -59,7 +59,6 @@ const AboutSection = () => {
     },
   ];
 
-  // Variants for animation
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -70,7 +69,7 @@ const AboutSection = () => {
   };
 
   const itemVariants = {
-    hidden: (i) => ({ opacity: 0, x: i % 2 === 0 ? -30 : 30 }), // Left for even, right for odd
+    hidden: (i) => ({ opacity: 0, x: i % 2 === 0 ? -30 : 30 }),
     visible: { opacity: 1, x: 0, transition: { type: "spring", damping: 15 } },
   };
 

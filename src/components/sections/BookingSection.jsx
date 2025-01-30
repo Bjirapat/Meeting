@@ -83,7 +83,7 @@ const BookingSection = () => {
   const [selectedFloor, setSelectedFloor] = useState("");
   const [participants, setParticipants] = useState("");
 
-  const { user } = useAuth(); // ใช้ข้อมูลผู้ใช้ที่ล็อกอินอยู่ผ่าน useAuth
+  const { user } = useAuth();
 
   const form = useForm({
     defaultValues: {
@@ -114,21 +114,18 @@ const BookingSection = () => {
     }
   }, [selectedRoomType, participants]);
 
-  // ใช้ selectedBuilding เพื่อดึงข้อมูลชั้น เมื่อมีการเปลี่ยนแปลงค่า
   useEffect(() => {
     if (selectedBuilding && selectedRoomType && participants) {
       fetchFloors(selectedBuilding);
     }
   }, [selectedBuilding, selectedRoomType, participants]);
 
-  // เฝ้าดู selectedBuilding, selectedFloor, selectedRoomType และ participants เพื่อดึงข้อมูลห้อง
   useEffect(() => {
     if (selectedBuilding && selectedFloor && selectedRoomType && participants) {
       fetchRooms();
     }
   }, [selectedBuilding, selectedFloor, selectedRoomType, participants]);
 
-  // ฟังก์ชันสำหรับดึงประเภทห้องจาก API
   const fetchRoomTypes = async () => {
     try {
       const response = await axios.get(`${API_URL}/roomtypes`);
@@ -139,7 +136,6 @@ const BookingSection = () => {
     }
   };
 
-  // ฟังก์ชันดึงข้อมูลอาคาร
   const fetchBuildings = async () => {
     try {
       const response = await axios.get(`${API_URL}/buildings`);
@@ -150,7 +146,6 @@ const BookingSection = () => {
     }
   };
 
-  // ฟังก์ชันดึงข้อมูลชั้น ตามอาคารที่เลือก
   const fetchFloors = async (buildingId) => {
     try {
       const response = await axios.get(
@@ -163,7 +158,6 @@ const BookingSection = () => {
     }
   };
 
-  // ฟังก์ชันดึงข้อมูลห้อง ตามเงื่อนไขที่เลือก
   const fetchRooms = async () => {
     try {
       const response = await axios.get(`${API_URL}/rooms`, {
@@ -173,7 +167,7 @@ const BookingSection = () => {
           participants,
         },
       });
-      // กรองห้องที่ตรงกับประเภทห้องที่เลือก
+
       const filteredRooms = response.data.filter((room) => {
         return room.RTNUM.toString() === selectedRoomType.toString();
       });
@@ -181,7 +175,7 @@ const BookingSection = () => {
         toast.error(
           `ไม่พบห้องประเภท ${getRoomTypeName(selectedRoomType)} ในชั้นที่เลือก`
         );
-        form.setValue("room", ""); // เคลียร์ค่า room ถ้าไม่มีห้อง
+        form.setValue("room", "");
       }
       setRooms(filteredRooms);
     } catch (error) {
@@ -190,7 +184,6 @@ const BookingSection = () => {
     }
   };
 
-  // ฟังก์ชันเสริมในการดึงชื่อประเภทห้อง
   const getRoomTypeName = (rtNumber) => {
     const roomType = roomTypes.find(
       (rt) => rt.RTNUMBER.toString() === rtNumber
@@ -198,7 +191,6 @@ const BookingSection = () => {
     return roomType ? roomType.RTNAME : "";
   };
 
-  // ฟังก์ชันส่งข้อมูลการจอง
   const onSubmit = async (data) => {
     try {
       if (!user?.ssn) {
@@ -206,7 +198,6 @@ const BookingSection = () => {
         return;
       }
 
-      // กำหนดเวลาเริ่มต้นและสิ้นสุดจาก input และตรวจสอบเวลาให้ถูกต้อง
       const bookingDate = new Date(data.date);
       const startDateTime = new Date(bookingDate);
       const [startHours, startMinutes] = data.startTime.split(":");
@@ -218,13 +209,11 @@ const BookingSection = () => {
       const [endHours, endMinutes] = data.endTime.split(":");
       endDateTime.setHours(parseInt(endHours, 10), parseInt(endMinutes, 10));
 
-      // ตรวจสอบว่าเวลาเริ่มน้อยกว่าเวลาสิ้นสุดหรือไม่
       if (startDateTime >= endDateTime) {
         toast.error("เวลาเริ่มต้นต้องน้อยกว่าเวลาสิ้นสุด");
         return;
       }
 
-      // จัดการข้อมูลการจองที่จะส่งไป API
       const bookingData = {
         date: format(bookingDate, "yyyy-MM-dd"),
         startTime: format(startDateTime, "HH:mm"),
@@ -233,16 +222,14 @@ const BookingSection = () => {
         essn: user.ssn,
       };
 
-      // เรียก API เพื่อบันทึกการจอง
       const response = await axios.post(`${API_URL}/book-room`, bookingData);
       if (response.data.success) {
-        // แสดงข้อความตอบกลับตามประเภทห้อง
         if (response.data.isVIP) {
           toast.info("การจองห้อง VIP อยู่ระหว่างรอการอนุมัติ");
         } else {
           toast.success("การจองสำเร็จ!");
         }
-        form.reset(); // รีเซ็ตฟอร์มเมื่อจองเสร็จสิ้น
+        form.reset();
       }
     } catch (error) {
       if (error.response?.data?.error === "ห้องถูกจองในช่วงเวลานี้แล้ว") {
@@ -280,7 +267,6 @@ const BookingSection = () => {
                 variants={containerVariants}
                 className="grid grid-cols-1 md:grid-cols-2 gap-6"
               >
-                {/* Date Field */}
                 <motion.div variants={formControlVariants}>
                   <FormField
                     control={form.control}
@@ -311,7 +297,7 @@ const BookingSection = () => {
                             </FormControl>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
+                            <Calendar
                               mode="single"
                               selected={field.value}
                               onSelect={field.onChange}

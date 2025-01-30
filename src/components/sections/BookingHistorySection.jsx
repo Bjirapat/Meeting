@@ -110,7 +110,9 @@ const BookingHistorySection = () => {
         });
         setShowCancelReason(true);
       } else {
-        throw new Error(response.data.error || "Failed to fetch cancel details");
+        throw new Error(
+          response.data.error || "Failed to fetch cancel details"
+        );
       }
     } catch (error) {
       console.error("Error fetching cancel details:", error);
@@ -182,13 +184,19 @@ const BookingHistorySection = () => {
     >
       <AlertCircle className="mx-auto h-12 w-12 text-gray-400" />
       <p className="mt-2 text-lg font-semibold text-gray-900">{message}</p>
-      {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+      {description && (
+        <p className="mt-1 text-sm text-gray-500">{description}</p>
+      )}
     </motion.div>
   );
 
   if (!user?.ssn) {
     return (
-      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <Card className="max-w-6xl mx-auto overflow-hidden shadow-lg rounded-lg">
           <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
             <CardTitle className="text-2xl font-bold">
@@ -259,7 +267,9 @@ const BookingHistorySection = () => {
                         <TableCell>
                           {format(new Date(booking.ENDTIME), "HH:mm")}
                         </TableCell>
-                        <TableCell>{getStatusBadge(booking.STUBOOKING)}</TableCell>
+                        <TableCell>
+                          {getStatusBadge(booking.STUBOOKING)}
+                        </TableCell>
                         <TableCell>
                           {booking.TIME
                             ? format(new Date(booking.TIME), "HH:mm")
@@ -289,7 +299,9 @@ const BookingHistorySection = () => {
                               )}
                               {booking.STUBOOKING === 5 && (
                                 <DropdownMenuItem
-                                  onClick={() => handleShowCancelReason(booking)}
+                                  onClick={() =>
+                                    handleShowCancelReason(booking)
+                                  }
                                 >
                                   <Info className="h-4 w-4 mr-2" />
                                   ดูเหตุผลการยกเลิก
@@ -378,4 +390,3 @@ const BookingHistorySection = () => {
 };
 
 export default BookingHistorySection;
-

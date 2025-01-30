@@ -28,7 +28,7 @@ const Header = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-  // เมนูที่ต้องการ permission ในการแสดง
+
   const userMenuItems = [
     { mnum: 8, icon: Calendar, label: "จองห้อง", path: "/dashboard/booking" },
     {
@@ -45,7 +45,7 @@ const Header = () => {
     },
     { mnum: 11, icon: Info, label: "เกี่ยวกับ", path: "/dashboard/about" },
   ];
-  // ตรวจสอบสิทธิ์ในการเข้าถึงเมนู
+
   const filteredUserMenuItems = userMenuItems.filter((item) =>
     hasPermission(item.mnum)
   );
@@ -79,23 +79,28 @@ const Header = () => {
             <Clock className="h-5 w-5 text-blue-600" />
           </div>
           <div className="flex flex-col">
-            <motion.span 
+            <motion.span
               className="text-sm text-gray-500"
               animate={{ y: 0, opacity: 1 }}
               initial={{ y: 10, opacity: 0 }}
             >
-              {time.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              {time.toLocaleDateString("th-TH", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </motion.span>
-            <motion.div 
+            <motion.div
               className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
               animate={{ y: 0, opacity: 1 }}
               initial={{ y: 10, opacity: 0 }}
             >
-              {time.toLocaleTimeString('th-TH', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit',
-                hour12: false 
+              {time.toLocaleTimeString("th-TH", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
               })}
               <motion.span
                 animate={{ opacity: [1, 0] }}

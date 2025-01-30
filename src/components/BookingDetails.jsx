@@ -5,7 +5,9 @@ export const BookingDetails = ({ booking }) => {
   return (
     <div className="flex-1 space-y-4">
       <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100/50">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">รายละเอียดการจอง</h3>
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">
+          รายละเอียดการจอง
+        </h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-gray-600">รหัสการจอง:</span>

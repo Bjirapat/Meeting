@@ -19,7 +19,7 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm, booking }) => {
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent className="sm:max-w-xl bg-gradient-to-b from-gray-50 to-white/95 backdrop-blur-sm border-0 shadow-[0_0_1.5rem_rgba(0,0,0,0.1)] animate-in slide-in-from-bottom-4">
         <div className="absolute top-4 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full opacity-90" />
-        
+
         <AlertDialogHeader className="pt-6 space-y-6">
           <div className="flex items-center justify-center">
             <AlertDialogTitle className="text-2xl font-bold text-center flex items-center">
@@ -42,7 +42,9 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm, booking }) => {
                     <MapPin className="w-5 h-5 text-blue-600" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-blue-600/70">ห้องประชุม</div>
+                    <div className="text-sm font-medium text-blue-600/70">
+                      ห้องประชุม
+                    </div>
                     <div className="font-semibold text-blue-900">
                       ชื่อห้อง {booking.CFRNAME}
                     </div>
@@ -54,7 +56,9 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm, booking }) => {
                     <Calendar className="w-5 h-5 text-purple-600" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-purple-600/70">วันที่</div>
+                    <div className="text-sm font-medium text-purple-600/70">
+                      วันที่
+                    </div>
                     <div className="font-semibold text-purple-900">
                       {format(new Date(booking.BDATE), "dd/MM/yyyy")}
                     </div>
@@ -66,7 +70,9 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm, booking }) => {
                     <Clock className="w-5 h-5 text-pink-600" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-pink-600/70">เวลา</div>
+                    <div className="text-sm font-medium text-pink-600/70">
+                      เวลา
+                    </div>
                     <div className="font-semibold text-pink-900">
                       {format(new Date(booking.STARTTIME), "HH:mm")} -{" "}
                       {format(new Date(booking.ENDTIME), "HH:mm")} น.
@@ -79,7 +85,7 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm, booking }) => {
         </AlertDialogHeader>
 
         <AlertDialogFooter className="sm:space-x-4">
-          <AlertDialogCancel 
+          <AlertDialogCancel
             className="relative group px-8 hover:bg-gray-100/80"
             onClick={onClose}
           >
@@ -87,7 +93,7 @@ const CancelConfirmationModal = ({ isOpen, onClose, onConfirm, booking }) => {
             <X className="w-4 h-4 mr-2" />
             ยกเลิก
           </AlertDialogCancel>
-          
+
           <AlertDialogAction
             onClick={onConfirm}
             className="relative group px-8 border-0 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 hover:from-blue-600 hover:via-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"

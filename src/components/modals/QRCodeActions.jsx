@@ -5,17 +5,17 @@ import { toast } from "sonner";
 
 export const QRCodeActions = ({ qrRef, booking, qrContent }) => {
   const handleDownload = () => {
-    const svgElement = qrRef.current?.querySelector('svg');
+    const svgElement = qrRef.current?.querySelector("svg");
     if (!svgElement) {
       toast.error("ไม่สามารถดาวน์โหลด QR Code ได้");
       return;
     }
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const data = (new XMLSerializer()).serializeToString(svgElement);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const data = new XMLSerializer().serializeToString(svgElement);
     const DOMURL = window.URL || window.webkitURL || window;
-    const svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+    const svgBlob = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
     const url = DOMURL.createObjectURL(svgBlob);
     const img = new Image();
 
@@ -26,10 +26,10 @@ export const QRCodeActions = ({ qrRef, booking, qrContent }) => {
       DOMURL.revokeObjectURL(url);
 
       const imgURI = canvas
-        .toDataURL('image/png')
-        .replace('image/png', 'image/octet-stream');
+        .toDataURL("image/png")
+        .replace("image/png", "image/octet-stream");
 
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.download = `booking-${booking.RESERVERID}.png`;
       link.href = imgURI;
       document.body.appendChild(link);
@@ -47,7 +47,7 @@ export const QRCodeActions = ({ qrRef, booking, qrContent }) => {
         await navigator.share({
           title: "ยืนยันการเข้าใช้ห้อง",
           text: `กรุณายืนยันการเข้าใช้ห้อง ${booking.CFRNAME}`,
-          url: qrContent
+          url: qrContent,
         });
         toast.success("แชร์ลิงก์สำเร็จ");
       } else {

@@ -18,9 +18,7 @@ const ContactUser = () => {
     reset,
   } = useForm();
 
-  // ฟังก์ชันสำหรับการส่งข้อมูลเมื่อมีการ submit ฟอร์ม
   const onSubmit = async (data) => {
-    // ตรวจสอบว่า user มีค่า SSN หรือไม่ (เพื่อยืนยันการล็อกอิน)
     if (!user?.ssn) {
       toast.error("กรุณาเข้าสู่ระบบก่อนส่งข้อความ");
       return;
@@ -40,7 +38,6 @@ const ContactUser = () => {
         MESSAGE: data.message,
       });
 
-      // ตรวจสอบความสำเร็จในการส่งข้อมูล
       if (response.data.success) {
         toast.success("ส่งคำขอปลดล็อคเรียบร้อยแล้ว");
         reset();
