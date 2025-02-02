@@ -9,6 +9,10 @@ Oracle Database
 React.js  
 Tailwind CSS  
 
+Client Oracle Server Link
+https://www.oracle.com/database/technologies/instant-client/downloads.html
+
+
 
 How to install and use  
 Set up the database  
